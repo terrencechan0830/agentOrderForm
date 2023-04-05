@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1 class="display-4">Welcome back!</h1>
+  <hr class="my-4">
+  <p class="lead">This website is to help organise the orders placed by agents. You can refer to the guide for placing the orders.</p>
+  <a class="btn btn-primary btn-xs" href="{{ url_for('orders.new_order') }}" role="button">Create Order</a>
+</div>
+{% endblock content %}

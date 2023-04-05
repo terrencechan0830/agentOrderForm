@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <article class="media content-section">
+        <div class="media-body">
+            <div class="article-metadata">
+            <a class="mr-2" href="#">{{ order.agent.username }}</a>
+            <small class="text-muted">{{ order.order_date.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <p class="article-content">{{ order.product }} * {{ order.quantity }}</p>
+        </div>
+    </article>
+
+{% endblock content %}

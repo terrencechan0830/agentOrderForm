@@ -1,0 +1,12 @@
+Flask==2.2.3
+Flask_Bcrypt==1.0.1
+Flask_Login==0.6.0
+Flask_Mail==0.9.1
+Flask_SQLAlchemy==3.0.2
+Flask_WTF==1.0.1
+itsdangerous==2.1.2
+pyodbc==4.0.35
+pytz==2021.3
+WTForms==3.0.1
+WTForms_SQLAlchemy==0.3
+email_validator==1.1.3

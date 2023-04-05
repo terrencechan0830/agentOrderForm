@@ -1,0 +1,322 @@
+{% extends "layout.html" %}
+{% block content %}
+<input type="button" class="btn btn-outline-info" value="&laquo; Back to Order History" onclick="history.back()">
+<br>
+<div class="card mt-2 mb-2 pl-1" style="width: 300px;">
+    <u>Agent's Information</u>
+    Name: {{ ordergroup.agent.username }}
+    <br>
+    Phone No.: {{ ordergroup.agent.phone }}
+    <br>
+</div> 
+<div class="content-section">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form" id="product_form">
+            <legend class="border-bottom mb-4">{{ legend }}</legend>
+            <div class="row pl-1" id="ordergroup_check">
+                <div class="col-3 custom-control custom-switch mt-1 pl-5">
+                    {% if ordergroup.confirm_flag %}
+                        <input type="checkbox" class="custom-control-input" id="confirm_check" name="confirm_check" checked>
+                    {% else %}
+                        <input type="checkbox" class="custom-control-input" id="confirm_check" name="confirm_check">
+                    {% endif %}
+                    <label class="custom-control-label" for="confirm_check">Confirm</label>
+                </div>
+                <div class="col-3 custom-control custom-switch mt-1 pl-5">
+                    {% if ordergroup.paid_flag %}
+                        <input type="checkbox" class="custom-control-input" id="paid_check" name="paid_check" checked>
+                    {% else %}
+                        <input type="checkbox" class="custom-control-input" id="paid_check" name="paid_check">
+                    {% endif %}
+                    <label class="custom-control-label" for="paid_check">Paid</label>
+                </div>
+                <div class="col-3 custom-control custom-switch mt-1 pl-5">
+                    {% if ordergroup.fulfill_flag %}
+                        <input type="checkbox" class="custom-control-input" id="fulfill_check" name="fulfill_check" checked>
+                    {% else %}
+                        <input type="checkbox" class="custom-control-input" id="fulfill_check" name="fulfill_check">
+                    {% endif %}
+                    <label class="custom-control-label" for="fulfill_check">Fulfill</label>
+                </div>
+            </div>
+            <div class="row" id="row0">
+                <button type="button" class="btn btn-danger float-right mt-2" data-toggle="modal" data-target="#deleteModal">Delete Order</button>
+            </div>
+            <br>
+
+            <div id="send_on_behalf_form">
+                {% if ordergroup.send_on_behalf_flag == True %}
+                    <div class="custom-control custom-switch" id="form-check">
+                        {{ form.sendonbehalf(class="custom-control-input", id="send_on_bahalf_check", onclick="customer_fields()", checked="checked") }}
+                        {{ form.sendonbehalf.label(class="custom-control-label", value=False, for="send_on_bahalf_check") }}
+                    </div>
+
+                    <div class="row" id="customerinfo" style="display:block">
+                        <div>
+                            {{ form.customername.label(class="customername") }}
+                            {% if form.customername.errors %}
+                                {{ form.customername(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.customername.errors%}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.customername(class="form-control", value=ordergroup.customername) }}
+                            {% endif %}
+
+                        </div>
+                        <div>
+                            {{ form.customerphoneno.label(class="customerphone") }}
+                            {% if form.customerphoneno.errors %}
+                                {{ form.customerphoneno(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.customerphoneno.errors%}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.customerphoneno(class="form-control", value=ordergroup.customerphoneno) }}
+                            {% endif %}
+
+                        </div>
+                        <div>
+                            {{ form.customeraddress.label(class="customeraddress") }}
+                            {% if form.customeraddress.errors %}
+                                {{ form.customeraddress(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.customeraddress.errors%}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.customeraddress(class="form-control", value=ordergroup.customeraddress) }}
+                            {% endif %}                        
+                        </div>
+                    </div>
+                    <hr>
+                {% else %}
+                    <div class="custom-control custom-switch" id="form-check">
+                        {{ form.sendonbehalf(class="custom-control-input", id="send_on_bahalf_check", onclick="customer_fields()") }}
+                        {{ form.sendonbehalf.label(class="custom-control-label", value=False, for="send_on_bahalf_check") }}
+                    </div>
+
+                    <div class="row" id="customerinfo" style="display:none">
+                        <div>
+                            {{ form.customername.label(class="customername") }}
+                            {% if form.customername.errors %}
+                                {{ form.customername(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.customername.errors%}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.customername(class="form-control", value=ordergroup.customername) }}
+                            {% endif %}
+
+                        </div>
+                        <div>
+                            {{ form.customerphoneno.label(class="customerphone") }}
+                            {% if form.customerphoneno.errors %}
+                                {{ form.customerphoneno(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.customerphoneno.errors%}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.customerphoneno(class="form-control", value=ordergroup.customerphoneno) }}
+                            {% endif %}
+
+                        </div>
+                        <div>
+                            {{ form.customeraddress.label(class="customeraddress") }}
+                            {% if form.customeraddress.errors %}
+                                {{ form.customeraddress(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.customeraddress.errors%}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.customeraddress(class="form-control", value=ordergroup.customeraddress) }}
+                            {% endif %}                        
+                        </div>
+                    </div>
+                    <hr>
+                {% endif %}
+
+
+            </div>
+
+
+            <div class="row col-2" id="row0">
+                <button class="btn btn-dark float-right mt-2" onclick="add_more_field()">+ Add more</button>
+            </div>
+
+            {% for item in orders %}
+                <div class="row" id="row{{loop.index}}">
+                    <div class="col-1 custom-control custom-switch mt-5 pl-5">
+                        {% if item.arrival_flag %}
+                            <input type="checkbox" class="custom-control-input" id="arrival_check{{loop.index}}" name="arrival_check{{loop.index}}" checked>
+                        {% else %}
+                            <input type="checkbox" class="custom-control-input" id="arrival_check{{loop.index}}" name="arrival_check{{loop.index}}">
+                        {% endif %}
+                        <label class="custom-control-label" for="arrival_check{{loop.index}}">Arrival</label>
+                    </div>
+                    <div class="col-1 custom-control custom-switch mt-5 pl-5">
+                        {% if item.fulfill_flag %}
+                            <input type="checkbox" class="custom-control-input" id="fulfill_check{{loop.index}}" name="fulfill_check{{loop.index}}" checked>
+                        {% else %}
+                            <input type="checkbox" class="custom-control-input" id="fulfill_check{{loop.index}}" name="fulfill_check{{loop.index}}">
+                        {% endif %}
+                        <label class="custom-control-label" for="fulfill_check{{loop.index}}">Fulfill</label>
+                    </div>
+                    <div class="col-6">
+                        {{ form.product.label(class="form-control-label mt-1") }}
+                        {% if form.product.errors %}
+                            {{ form.product(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.product.errors%}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.product(class="form-control mt-1", value=item.product) }}
+                        {% endif %}
+                    </div>
+                    <div class="col-2">
+                        {{ form.quantity.label(class="form-control-label mt-1") }}
+                        {% if form.quantity.errors %}
+                            {{ form.quantity(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.quantity.errors%}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.quantity(class="form-control mt-1", value=item.quantity) }}
+                        {% endif %}
+                    </div>
+                    {% if loop.index > 1 %}
+                        <div class="col-1"> <br>
+                            <button id="remove{{loop.index}}" class="btn btn-danger float-left mt-3" onclick="remove(this)">Remove</button>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+        </fieldset>
+        <div class="form-group">
+            <br>
+            {{ form.submit(class="btn btn-outline-info", type="submit", value="Update") }}
+        </div>
+    </form>
+</div>
+
+            <!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Order?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form action="{{ url_for('orders.delete_order_group', order_group_id=order_group_id) }}" method="POST">
+                    <input class="btn btn-danger" type="submit" value="Delete">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var countre={{ orders|length }};
+    function add_more_field(){
+        countre+=1
+        html='<div class="row" id="row'+countre+'">\
+                <div class="col-1 custom-control custom-switch mt-5 pl-5">\
+                    <input type="checkbox" class="custom-control-input" id="arrival_check'+countre+'">\
+                    <label class="custom-control-label" for="arrival_check'+countre+'">Arrival</label>\
+                </div>\
+                <div class="col-1 custom-control custom-switch mt-5 pl-5">\
+                    <input type="checkbox" class="custom-control-input" id="fulfill_check'+countre+'">\
+                    <label class="custom-control-label" for="fulfill_check'+countre+'">Fulfill</label>\
+                </div>\
+                <div class="col-6">\
+                    {{ form.product.label(class="form-control-label mt-1") }}\
+                    {% if form.product.errors %}\
+                        {{ form.product(class="form-control is-invalid") }}\
+                        <div class="invalid-feedback">\
+                            {% for error in form.product.errors%}\
+                                <span>{{ error }}</span>\
+                            {% endfor %}\
+                        </div>\
+                    {% else %}\
+                        {{ form.product(class="form-control mt-1") }}\
+                    {% endif %}\
+                </div>\
+                <div class="col-2">\
+                    {{ form.quantity.label(class="form-control-label mt-1") }}\
+                    {% if form.quantity.errors %}\
+                        {{ form.quantity(class="form-control is-invalid") }}\
+                        <div class="invalid-feedback">\
+                            {% for error in form.quantity.errors%}\
+                                <span>{{ error }}</span>\
+                            {% endfor %}\
+                        </div>\
+                    {% else %}\
+                        {{ form.quantity(class="form-control mt-1") }}\
+                    {% endif %}\
+                </div>\
+                <div class="col-1"> <br>\
+                    <button id="remove'+countre+'" class="btn btn-danger float-left mt-3" onclick="remove(this)">Remove</button>\
+                </div>\
+            </div>'
+            
+        var form = document.getElementById('product_form')
+        form.insertAdjacentHTML( 'beforeend', html)
+        // form.innerHTML += html
+    }
+    function remove(button){
+        let number = button.id.substring(6, 100)
+        let row = document.getElementById('row'+number)
+        row.remove()
+        countre-=1
+
+        var rowitems = document.getElementsByClassName('row')
+        for (var i = 0; i < rowitems.length; i++) {
+            if ( Number(rowitems[i].id.substring(3, (rowitems[i].id.length))) >= Number(number) ) {
+                var row1 = document.getElementById(rowitems[i].id)
+                row1.setAttribute("id", "row" + String(Number(rowitems[i].id.substring(3, 100)) - 1))
+            }
+        }
+
+        var removebtnitems = document.getElementsByClassName('btn btn-danger float-left mt-2')
+        for (var i = 0; i < removebtnitems.length; i++) {
+            if ( Number(removebtnitems[i].id.substring(6, (removebtnitems[i].id.length))) >= Number(number) ) {
+                var removebtn = document.getElementById(removebtnitems[i].id)
+                removebtn.setAttribute("id", "remove" + String(Number(removebtnitems[i].id.substring(6, 100)) - 1))
+            }
+        }
+    }
+    function customer_fields(){
+        var checkBox = document.getElementById("send_on_bahalf_check").checked
+        var customerinfo = document.getElementById("customerinfo")
+        console.log(checkBox)
+
+        if (checkBox) {
+            customerinfo.style.display = "block"
+        } else {
+            customerinfo.style.display = "none"
+        }
+    }
+</script>
+
+{% endblock content %}

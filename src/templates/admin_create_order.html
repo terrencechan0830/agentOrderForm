@@ -1,0 +1,180 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form" id="product_form">
+            <legend class="border-bottom mb-4">{{ legend }}</legend>
+            <div>
+                {{ form.agent.label(class="form-control-label", for="agent") }}
+                {{ form.agent(class="form-control col-4", id="agent") }}
+            </div>
+            <hr>
+            <div id="send_on_behalf_form">
+                <div class="custom-control custom-switch" id="form-check">
+                    {{ form.sendonbehalf(class="custom-control-input", id="send_on_bahalf_check", onclick="customer_fields()") }}
+                    {{ form.sendonbehalf.label(class="custom-control-label", value=False, for="send_on_bahalf_check") }}
+                </div>
+                <div class="row" id="customerinfo" style="display:none">
+                    <div>
+                        {{ form.customername.label(class="customername") }}
+                        {% if form.customername.errors %}
+                            {{ form.customername(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.customername.errors%}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.customername(class="form-control") }}
+                        {% endif %}
+
+                    </div>
+                    <div>
+                        {{ form.customerphoneno.label(class="customerphone") }}
+                        {% if form.customerphoneno.errors %}
+                            {{ form.customerphoneno(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.customerphoneno.errors%}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.customerphoneno(class="form-control") }}
+                        {% endif %}
+
+                    </div>
+                    <div>
+                        {{ form.customeraddress.label(class="customeraddress") }}
+                        {% if form.customeraddress.errors %}
+                            {{ form.customeraddress(class="form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.customeraddress.errors%}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.customeraddress(class="form-control") }}
+                        {% endif %}                        
+                    </div>
+                </div>
+                <hr>
+            </div>
+
+            <div class="row col-2" id="row0">
+                <button class="btn btn-dark float-right mt-2" onclick="add_more_field()">+ Add more</button>
+            </div>
+            <div class="row" id="row1">
+                <div class="col-8">
+                    {{ form.product.label(class="productlabel") }}
+                    {% if form.product.errors %}
+                        {{ form.product(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.product.errors%}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.product(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="col-2">
+                    {{ form.quantity.label(class="form-control-label") }}
+                    {% if form.quantity.errors %}
+                        {{ form.quantity(class="form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.quantity.errors%}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.quantity(class="form-control") }}
+                    {% endif %}
+                </div>
+            </div>
+        </fieldset>
+        <div class="form-group">
+            <br>
+            {{ form.submit(class="btn btn-outline-info", type="submit") }}
+        </div>
+    </form>
+</div>
+
+<script>
+
+    console.log(agentlist)
+
+    var countre=1;
+    function add_more_field(){
+        countre+=1
+        html='<div class="row" id="row'+countre+'">\
+                <div class="col-8">\
+                    {{ form.product.label(class="form-control-label") }}\
+                    {% if form.product.errors %}\
+                        {{ form.product(class="form-control is-invalid") }}\
+                        <div class="invalid-feedback">\
+                            {% for error in form.product.errors%}\
+                                <span>{{ error }}</span>\
+                            {% endfor %}\
+                        </div>\
+                    {% else %}\
+                        {{ form.product(class="form-control") }}\
+                    {% endif %}\
+                </div>\
+                <div class="col-2">\
+                    {{ form.quantity.label(class="form-control-label") }}\
+                    {% if form.quantity.errors %}\
+                        {{ form.quantity(class="form-control is-invalid") }}\
+                        <div class="invalid-feedback">\
+                            {% for error in form.quantity.errors%}\
+                                <span>{{ error }}</span>\
+                            {% endfor %}\
+                        </div>\
+                    {% else %}\
+                        {{ form.quantity(class="form-control") }}\
+                    {% endif %}\
+                </div>\
+                <div class="col-1"> <br>\
+                    <button id="remove'+countre+'" class="btn btn-danger float-left mt-2" onclick="remove(this)">Remove</button>\
+                </div>\
+            </div>'
+
+        var form = document.getElementById('product_form')
+        form.insertAdjacentHTML( 'beforeend', html)
+        // form.innerHTML += html
+    }
+    function remove(button){
+        let number = button.id.substring(6, 100)
+        let row = document.getElementById('row'+number)
+        row.remove()
+        countre-=1
+
+        var rowitems = document.getElementsByClassName('row')
+        for (var i = 0; i < rowitems.length; i++) {
+            if ( Number(rowitems[i].id.substring(3, (rowitems[i].id.length))) >= Number(number) ) {
+                var row1 = document.getElementById(rowitems[i].id)
+                row1.setAttribute("id", "row" + String(Number(rowitems[i].id.substring(3, 100)) - 1))
+            }
+        }
+
+        var removebtnitems = document.getElementsByClassName('btn btn-danger float-left mt-2')
+        for (var i = 0; i < removebtnitems.length; i++) {
+            if ( Number(removebtnitems[i].id.substring(6, (removebtnitems[i].id.length))) >= Number(number) ) {
+                var removebtn = document.getElementById(removebtnitems[i].id)
+                removebtn.setAttribute("id", "remove" + String(Number(removebtnitems[i].id.substring(6, 100)) - 1))
+            }
+        }
+    }
+    function customer_fields(){
+        var checkBox = document.getElementById("send_on_bahalf_check").checked
+        var customerinfo = document.getElementById("customerinfo")
+
+        if (checkBox) {
+            customerinfo.style.display = "block"
+        } else {
+            customerinfo.style.display = "none"
+        }
+    }
+</script>
+
+{% endblock content %}
